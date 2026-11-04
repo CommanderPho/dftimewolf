@@ -1,55 +1,51 @@
-[tool.poetry]
+[project]
 name = "dftimewolf"
-version = "0.1.0"
-description = ""
-authors = ["Thomas Chopitea <tomchop@gmail.com>"]
-license = "Apache"
+version = "0.1.1"
+description = "A framework for orchestrating forensic collection, processing and data export."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+    "backoff>=2.2.1",
+    "boto3>=1.43.50",
+    "docker>=7.2.0",
+    "filelock>=4.2.1",
+    "google-cloud-bigquery>=3.42.2",
+    "google-cloud-logging>=3.14.0",
+    "google-generativeai>=0.8.6",
+    "libcloudforensics==20260916",
+    "openrelik-api-client>=0.5.0",
+    "pandas>=3.0.3",
+    "ratelimit>=2.2.1",
+    "tabulate>=0.10.0",
+    "timesketch-api-client>=20260611",
+    "timesketch-import-client>=20260611",
+    "vertexai>=1.71.1",
+    "vt-py>=0.22.0",
+]
+authors = [{ name = "Thomas Chopitea", email = "tomchop@gmail.com" }]
+scripts = { dftimewolf = 'dftimewolf.cli.dftimewolf_recipes:Main'}
 
-[tool.poetry.scripts]
-dftimewolf = 'dftimewolf.cli.dftimewolf_recipes:Main'
-
-[tool.poetry.dependencies]
-python = ">=3.11,<3.15"
-backoff = "^2.2.1"
-boto3 = "^1.43.50"
-docker = "^7.2.0"
-filelock = "^4.2.1"
-google-cloud-bigquery = "^3.42.2"
-google-cloud-logging = "^3.14.0"
-google-generativeai = "^0.8.6"
-libcloudforensics = "20260916"
-openrelik-api-client = "^0.5.0"
-pandas = "^3.0.3"
-ratelimit = "^2.2.1"
-timesketch-api-client = "^20260611"
-timesketch-import-client = "^20260611"
-vertexai = "^1.71.1"
-vt-py = "^0.22.0"
-tabulate = "^0.10.0"
-
-[tool.poetry.group.dev.dependencies]
-absl-py = "^2.4.0"
-coverage = "^7.14.1"
-graphviz = "^0.21"
-mkdocs = "^1.6.1"
-mock = "^5.2.0"
-pylint = "^4.0.9"
-pyrefly = "^1.0.0"
-
-[tool.poetry.group.spannertelemetry]
-optional = true
-
-[tool.poetry.group.spannertelemetry.dependencies]
-google-cloud-spanner = "^3.64.0"
-
-[tool.poetry.group.opentelemetry]
-optional = true
-
-[tool.poetry.group.opentelemetry.dependencies]
-opentelemetry-api = "^1.45.1"
-opentelemetry-sdk = "^1.20.0"
-opentelemetry-exporter-otlp = "^1.20.0"
+[dependency-groups]
+dev = [
+    "absl-py>=2.4.0",
+    "coverage>=7.14.1",
+    "graphviz>=0.21",
+    "mkdocs>=1.6.1",
+    "mock>=5.2.0",
+    "pylint>=4.0.9",
+    "pyrefly>=1.0.0",
+]
+opentelemetry = [
+    "opentelemetry-api>=1.45.1",
+    "opentelemetry-exporter-otlp>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+]
+spannertelemetry = [
+    "google-cloud-spanner>=3.64.0",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+

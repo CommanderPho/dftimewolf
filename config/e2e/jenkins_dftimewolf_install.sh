@@ -11,7 +11,7 @@ sudo apt-get update -qq
 sudo apt-get install -y python3-pip
 sudo apt-get install --reinstall -y python3-apt
 python3 --version
-/usr/bin/python3 -m pip install poetry --break-system-packages
+/usr/bin/python3 -m pip install uv --break-system-packages
 
 
 if [[ "$*" =~ "include-docker" ]]; then
@@ -88,6 +88,6 @@ if [[ "$*" =~ "include-plaso" ]]; then
     docker pull log2timeline/plaso:latest
 fi
 
-echo "Installing dftimewolf via Poetry"
+echo "Installing dftimewolf via uv"
 # Install dftimewolf's pinned dependencies
-poetry install
+uv sync --frozen

@@ -6,27 +6,23 @@ on:
 
 jobs:
 
-  poetry:
+  install:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         python-version: ["3.12", "3.13", "3.14"]
     env:
       PYTHONPATH: "."
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v4
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
       with:
         python-version: ${{ matrix.python-version }}
+        enable-cache: true
     - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install
+      run: uv sync --frozen
     - name: Test running with full Python path
-      run: |
-        poetry run python dftimewolf/cli/dftimewolf_recipes.py -h
+      run: uv run python dftimewolf/cli/dftimewolf_recipes.py -h
     - name: Test Python script shortcut
-      run: |
-        poetry run dftimewolf -h
+      run: uv run dftimewolf -h

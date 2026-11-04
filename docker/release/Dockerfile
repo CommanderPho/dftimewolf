@@ -15,15 +15,16 @@ RUN apt install -y --no-install-recommends \
     python3-pip \
     libmagic1 \
     unzip \
+    curl \
     && apt-get clean && rm -rf /var/cache/apt/* /var/lib/apt/lists/* && apt-get autoremove -y
 
 RUN pip install --upgrade pip
-RUN pip install poetry
+RUN pip install uv
 ADD https://github.com/log2timeline/dftimewolf/archive/refs/heads/main.zip /tmp/repo.zip
 RUN unzip /tmp/repo.zip -d /tmp/ && mv /tmp/dftimewolf-main /app && rm /tmp/repo.zip
 
 WORKDIR /app
-RUN poetry install --with dev
+RUN uv sync --frozen --all-groups
 
 # Copy the entrypoint script into the container
 COPY ./docker/release/docker-entrypoint.sh /

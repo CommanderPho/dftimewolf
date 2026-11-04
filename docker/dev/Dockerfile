@@ -8,16 +8,17 @@ RUN apt update && apt install -y \
     build-essential \
     libmagic1 \
     git \
-    ssh
+    ssh \
+    curl
 
-RUN pip install poetry --break-system-packages
+RUN pip install uv --break-system-packages
 
 # /app is defined as the mount in the docker-compose.yaml file and should
 # point to the root of the dftimewolf install
 ADD . /app
 WORKDIR /app
 
-RUN poetry install --with dev
+RUN uv sync --frozen --all-groups
 
 # Copy the entrypoint script into the container
 COPY ./docker/dev/docker-entrypoint.sh /

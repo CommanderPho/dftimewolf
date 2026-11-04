@@ -6,21 +6,23 @@ read it already.
 
 ## Environment setup
 
-You can either use Poetry or Docker to develop on dftimewolf.
+You can either use uv or Docker to develop on dftimewolf.
 
-### Python virtualenv with Poetry
+### Python virtualenv with uv
 
-To be able to develop you need a local installation of dfTimewolf. To install it locally, a venv is recommended. We use poetry:
+To be able to develop you need a local installation of dfTimewolf. To install it locally, a venv is recommended. We use [uv](https://docs.astral.sh/uv/):
 
 ```bash
-pip install poetry
-poetry install
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync
 ```
+
+Optional dependency groups (OpenTelemetry, Spanner telemetry) are installed with `uv sync --all-groups`.
 
 Now you are ready to run dfTimewolf in your local environment:
 
 ```bash
-poetry run dftimewolf -h
+uv run dftimewolf -h
 ```
 
 ### Docker container
@@ -32,7 +34,7 @@ dependencies in.
 $ cd docker/dev
 $ docker compose run --rm dftw envshell
 [...]
-(dftimewolf-py3.10) root@3bb3a1ddec53:/app# poetry run dftimewolf -h
+(dftimewolf) root@3bb3a1ddec53:/app# uv run dftimewolf -h
 ```
 
 It will pick up changes from your current working directory, so tests will run
@@ -173,11 +175,10 @@ pylint --rcfile .pylintrc UPDATED_SOURCE_FILE
 ```
 
 ```bash
-pip install poetry
-poetry install
-poetry run python -m unittest discover -s tests -p '*.py'
-poetry run mypy --install-types --cache-dir .mypy_cache --non-interactive -p dftimewolf
-poetry run pytype --config pytype.conf
+uv sync
+uv run python -m unittest discover -s tests -p '*.py'
+uv run mypy --install-types --cache-dir .mypy_cache --non-interactive -p dftimewolf
+uv run pytype --config pytype.conf
 ```
 
 Docker equivalent:
@@ -185,6 +186,6 @@ Docker equivalent:
 ```bash
 cd docker/dev
 docker compose run --rm dftw tests
-docker compose run --rm -v `pwd`/../../:/app dftw poetry run mypy --install-types --cache-dir /tmp/.mypy_cache --non-interactive -p dftimewolf
-docker compose run --rm -v `pwd`/../../:/app dftw poetry run pytype --config /app/pytype.conf
+docker compose run --rm -v `pwd`/../../:/app dftw uv run mypy --install-types --cache-dir /tmp/.mypy_cache --non-interactive -p dftimewolf
+docker compose run --rm -v `pwd`/../../:/app dftw uv run pytype --config /app/pytype.conf
 ```

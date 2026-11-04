@@ -6,9 +6,11 @@ Ideally you'll want to install dftimewolf in its own virtual environment.
 
 ```
 git clone https://github.com/log2timeline/dftimewolf.git && cd dftimewolf
-pip install poetry
-poetry install
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync
 ```
+
+To also install optional dependency groups (OpenTelemetry and Spanner telemetry), run `uv sync --all-groups`.
 
 <div class="admonition note">
   <p class="first admonition-title">Attention</p>
@@ -16,8 +18,8 @@ poetry install
   to install them separately and make them available in your virtual environment.</p>
 </div>
 
-If you want to run dftimewolf from any other directory, activate the virtualenv
-by doing `poetry shell` in the main dfTimewolf directory.
+If you want to run dftimewolf from any other directory, activate the virtual
+environment created by uv (`.venv`) in the main dfTimewolf directory.
 
 ## Quick how-to
 

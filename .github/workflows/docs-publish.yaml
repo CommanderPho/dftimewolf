@@ -11,16 +11,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.13"
+          enable-cache: true
       - name: Install mkdocs & deps
         run: |
           sudo apt install graphviz
-          pip install poetry
-          poetry install
+          uv sync --frozen
       - name: Generate recipe doc
-        run: poetry run python docs/generate_recipe_doc.py data/recipes docs
+        run: uv run python docs/generate_recipe_doc.py data/recipes docs
       - name: Build doc
-        run: poetry run mkdocs gh-deploy --force
+        run: uv run mkdocs gh-deploy --force
