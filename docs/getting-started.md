@@ -18,6 +18,12 @@ To also install optional dependency groups (OpenTelemetry and Spanner telemetry)
   to install them separately and make them available in your virtual environment.</p>
 </div>
 
+The `plaso_ts` recipe runs Plaso via the `log2timeline/plaso` Docker image by
+default. On Windows this is the supported path: pull the image with
+`docker pull log2timeline/plaso:latest`, then run the recipe as usual. dfTimewolf
+passes POSIX paths into the container so storage files land on the host mount
+and can be uploaded to Timesketch.
+
 If you want to run dftimewolf from any other directory, activate the virtual
 environment created by uv (`.venv`) in the main dfTimewolf directory.
 
@@ -97,8 +103,3 @@ optional arguments:
                         will be created (default: us-central1-f)
 ```
 
-
-```ps1
-uv run dftimewolf plaso_ts "C:\Users\pho\repos\PHO_EXPLORATION,C:\Users\pho\repos\EmotivEpoc" --incident_id 1337
-
-```

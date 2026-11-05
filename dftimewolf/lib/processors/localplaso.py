@@ -1,5 +1,6 @@
 """Processes artifacts using a local plaso process."""
 import os
+import posixpath
 import subprocess
 import tempfile
 import uuid
@@ -132,6 +133,9 @@ class LocalPlasoProcessor(module.BaseModule):
     """
     description = container.name
     path = container.path
+    # Use POSIX joins for in-container paths so Windows hosts do not inject
+    # backslashes into Linux Docker paths (e.g. /data/output\file.plaso).
+    path_join = posixpath.join if self._use_docker else os.path.join
     if self._use_docker:
       plaso_output_dir = '/data/output'
       plaso_input_dir = '/data/input'
@@ -139,7 +143,7 @@ class LocalPlasoProcessor(module.BaseModule):
       plaso_output_dir = self._output_path
       plaso_input_dir = container.path
 
-    log_file_path = os.path.join(plaso_output_dir, 'plaso.log')
+    log_file_path = path_join(plaso_output_dir, 'plaso.log')
 
     # Build the plaso command line.
     if self._use_docker:
@@ -162,10 +166,11 @@ class LocalPlasoProcessor(module.BaseModule):
     # And now, the crux of the command.
     # Generate a new storage file for each plaso run
     plaso_output_file = f'{uuid.uuid4().hex}.plaso'.format()
-    plaso_output_path = os.path.join(plaso_output_dir, plaso_output_file)
+    plaso_output_path = path_join(plaso_output_dir, plaso_output_file)
     cmd.extend(['--storage-file', plaso_output_path, plaso_input_dir])
 
     plaso_storage_file_path = os.path.join(self._output_path, plaso_output_file)
+    host_log_path = os.path.join(self._output_path, 'plaso.log')
 
     self.logger.info(f'Log file: {plaso_storage_file_path}')
 
@@ -177,6 +182,13 @@ class LocalPlasoProcessor(module.BaseModule):
       self._DockerPlasoRun(path, full_cmd, plaso_input_dir, plaso_output_dir)
     else:
       self._LocalPlasoRun(cmd)
+
+    if (not os.path.isfile(plaso_storage_file_path) or
+        os.path.getsize(plaso_storage_file_path) == 0):
+      self.ModuleError(
+          f'Plaso storage file was not created at {plaso_storage_file_path}. '
+          f'Check {host_log_path} for details.',
+          critical=True)
 
     new_container = containers.File(description, plaso_storage_file_path)
     self.StoreContainer(new_container)
