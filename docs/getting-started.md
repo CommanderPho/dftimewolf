@@ -96,3 +96,9 @@ optional arguments:
   --zone ZONE           The GCP zone where the Analysis VM and copied disks
                         will be created (default: us-central1-f)
 ```
+
+
+```ps1
+uv run dftimewolf plaso_ts "C:\Users\pho\repos\PHO_EXPLORATION,C:\Users\pho\repos\EmotivEpoc" --incident_id 1337
+
+```
