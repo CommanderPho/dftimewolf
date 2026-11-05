@@ -103,3 +103,9 @@ optional arguments:
                         will be created (default: us-central1-f)
 ```
 
+
+```ps1
+$env:DFTIMEWOLF_DEBUG = "1"
+uv run dftimewolf plaso_ts "C:\Users\pho\repos\PHO_EXPLORATION" --incident_id 1338
+
+```
