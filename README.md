@@ -18,3 +18,43 @@ Github actions |  [Codecov](https://codecov.io/) | [CodeFactor](https://codefact
 ### Getting started
 
 [Documentation](https://dftimewolf.readthedocs.io/en/dev/getting-started.html) is hosted on readthedocs.io.
+
+### Run directly
+
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.11–3.14.
+
+```bash
+cd dftimewolf
+uv sync
+uv run dftimewolf -h
+```
+
+Run a recipe (example: `plaso_ts`):
+
+```bash
+uv run dftimewolf plaso_ts /path/to/evidence --incident_id 12345
+```
+
+On Windows (PowerShell):
+
+```powershell
+cd dftimewolf
+uv sync
+uv run dftimewolf -h
+uv run dftimewolf plaso_ts "C:\path\to\evidence" --incident_id 12345
+
+
+uv run dftimewolf plaso_ts "H:\TEMP\Spike3DEnv_ExploreUpgrade\Spike3DWorkEnv\Spike3D\EXTERNAL" --incident_id 1339
+```
+
+Optional: install all dependency groups with `uv sync --all-groups`. To use the installed `dftimewolf` console script without `uv run`, activate `.venv` first (`.venv\Scripts\Activate.ps1` on Windows, `source .venv/bin/activate` on Unix).
+
+
+### Building Docs
+
+```ps1
+
+uv sync
+uv run python docs/generate_recipe_doc.py data/recipes docs
+uv run mkdocs build
+```
